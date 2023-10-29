@@ -20,9 +20,15 @@ public class AccountService {
     }
 
     public Account addAccount(Account account) {
-        if (!accountRepository.existsByUsername(account.getUsername())) {
-            return accountRepository.save(account);
+        String username = account.getUsername();
+        String password = account.getPassword();
+        
+        if (username != null && !username.isBlank() && password != null && password.length() >= 4) {
+            if (!accountRepository.existsByUsername(username)) {
+                return accountRepository.save(account);
+            }
         }
         return null;
     }
+
 }

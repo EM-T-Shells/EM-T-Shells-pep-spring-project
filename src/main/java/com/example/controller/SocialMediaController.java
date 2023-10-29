@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.entity.Account;
+import com.example.exception.UsernameExistsException;
 import com.example.service.AccountService;
-import com.example.service.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ public class SocialMediaController {
     private final AccountService accountService;
 
     @Autowired
-    public SocialMediaController(AccountService accountService, MessageService messageService) {
+    public SocialMediaController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Account> postAccountHandler(@RequestBody Account account) {
+    public ResponseEntity<Account> login(@RequestBody Account account) {
         Account verifiedAccount = accountService.getAccount(account.getUsername(), account.getPassword());
         if (verifiedAccount != null) {
             return ResponseEntity.ok(verifiedAccount);
@@ -38,13 +38,17 @@ public class SocialMediaController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> postRegisterHandler(@RequestBody Account account) throws JsonProcessingException {
-        Account addedAccount = accountService.addAccount(account);
-        if (addedAccount != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(addedAccount);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<?> register(@RequestBody Account account) throws JsonProcessingException {
+        try {
+            Account addedAccount = accountService.addAccount(account);
+            if (addedAccount != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(addedAccount);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        } catch (UsernameExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+        }   
     }
 }
 

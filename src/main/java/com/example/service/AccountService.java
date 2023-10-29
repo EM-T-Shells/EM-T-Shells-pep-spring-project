@@ -21,7 +21,6 @@ public class AccountService {
 
     public Account addAccount(Account account) {
         if (!accountRepository.existsByUsername(account.getUsername())) {
-            // Use the save method to insert a new account
             return accountRepository.save(account);
         }
         return null;

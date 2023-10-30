@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.entity.Account;
-import com.example.exception.UsernameExistsException;
+
 import com.example.service.AccountService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

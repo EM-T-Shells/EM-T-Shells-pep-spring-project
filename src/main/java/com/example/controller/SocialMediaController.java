@@ -17,8 +17,9 @@ import org.springframework.http.ResponseEntity;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class SocialMediaController {
     private final AccountService accountService;
 
@@ -27,28 +28,25 @@ public class SocialMediaController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Account> login(@RequestBody Account account) {
-        Account verifiedAccount = accountService.getAccount(account.getUsername(), account.getPassword());
-        if (verifiedAccount != null) {
-            return ResponseEntity.ok(verifiedAccount);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @PostMapping("/register")
+    public ResponseEntity<Account> register(@RequestBody Account account) {
+        try {
+            Account registeredAccount = accountService.registerAccount(account);
+            return new ResponseEntity<>(registeredAccount, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Account account) throws JsonProcessingException {
+    @PostMapping("/login")
+    public ResponseEntity<Account> login(@RequestBody Account account) {
         try {
-            Account addedAccount = accountService.addAccount(account);
-            if (addedAccount != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(addedAccount);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-        } catch (UsernameExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
-        }   
+            Account loggedInAccount = accountService.login(account);
+            return new ResponseEntity<>(loggedInAccount, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
-

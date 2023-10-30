@@ -1,10 +1,9 @@
 package com.example.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
@@ -15,20 +14,25 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public Account getAccount(String username, String password) {
-        return accountRepository.findByUsernameAndPassword(username, password);
-    }
-
-    public Account addAccount(Account account) {
-        String username = account.getUsername();
-        String password = account.getPassword();
-        
-        if (username != null && !username.isBlank() && password != null && password.length() >= 4) {
-            if (!accountRepository.existsByUsername(username)) {
-                return accountRepository.save(account);
-            }
+    public Account registerAccount(Account account) {
+        if (account.getUsername() == null || account.getUsername().isEmpty()
+            || account.getPassword() == null || account.getPassword().length() < 4) {
+            throw new IllegalArgumentException("Invalid account information");
         }
-        return null;
+
+        Account existingAccount = accountRepository.findByUsername(account.getUsername());
+        if (existingAccount != null) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        return accountRepository.save(account);
     }
 
+    public Account login(Account account) {
+        Account existingAccount = accountRepository.findByUsername(account.getUsername());
+        if (existingAccount == null || !existingAccount.getPassword().equals(account.getPassword())) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
+        return existingAccount;
+    }
 }

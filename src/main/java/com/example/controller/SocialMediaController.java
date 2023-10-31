@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.entity.Account;
-
+import com.example.entity.Message;
 import com.example.service.AccountService;
+import com.example.service.MessageService;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +24,12 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/")
 public class SocialMediaController {
     private final AccountService accountService;
+    private final MessageService messageService;
 
     @Autowired
-    public SocialMediaController(AccountService accountService) {
+    public SocialMediaController(AccountService accountService, MessageService messageService) {
         this.accountService = accountService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/register")
@@ -47,6 +51,18 @@ public class SocialMediaController {
             return new ResponseEntity<>(loggedInAccount, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<Message> messages(@RequestBody Message message){
+        try {
+            Message postMessage = messageService.postMessage(message);
+            return new ResponseEntity<Message>(postMessage, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 }

@@ -55,7 +55,19 @@ public class SocialMediaController {
     }
 
     @PostMapping("/messages")
-    public ResponseEntity<Message> messages(@RequestBody Message message){
+    public ResponseEntity<Message> postMessages(@RequestBody Message message){
+        try {
+            Message postMessage = messageService.postMessage(message);
+            return new ResponseEntity<Message>(postMessage, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<Message> getMessages(@RequestBody Message message){
         try {
             Message postMessage = messageService.postMessage(message);
             return new ResponseEntity<Message>(postMessage, HttpStatus.OK);

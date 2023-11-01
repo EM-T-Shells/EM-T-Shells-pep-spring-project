@@ -77,5 +77,15 @@ public class SocialMediaController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }    
+    }  
+    
+    @GetMapping("/messages/{message_id}")
+    public ResponseEntity<Message> getMessageById(@PathVariable Integer message_id) {
+        try {
+            Message message = messageService.getMessageById(message_id);
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
 }

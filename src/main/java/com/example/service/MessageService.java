@@ -39,4 +39,16 @@ public class MessageService {
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
+
+    public Message getMessageById(Integer messageId) {
+        if (messageId == null) {
+            throw new IllegalArgumentException("Invalid message ID");
+        }
+        Optional<Message> message = messageRepository.findById(messageId);
+        if (message.isPresent()) {
+            return message.get();
+        } else {
+            throw new IllegalArgumentException("Message not found");
+        }
+    }
 }

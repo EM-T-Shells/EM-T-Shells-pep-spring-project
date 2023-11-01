@@ -7,6 +7,9 @@ import com.example.service.MessageService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -67,14 +70,12 @@ public class SocialMediaController {
     }
 
     @GetMapping("/messages")
-    public ResponseEntity<Message> getMessages(@RequestBody Message message){
+    public ResponseEntity<List<Message>> getMessages() {
         try {
-            Message postMessage = messageService.postMessage(message);
-            return new ResponseEntity<Message>(postMessage, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            List<Message> messages = messageService.getAllMessages();
+            return new ResponseEntity<>(messages, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }    
 }

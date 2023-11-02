@@ -13,6 +13,6 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Query("FROM Message WHERE message_id = :messageId")
     Message findMessageById(@Param("messageId") Integer messageId);
 
-    @Query("SELECT m FROM Message m WHERE m.posted_by = :account_id")
+    @Query("FROM Message WHERE posted_by = :account_id")
     List<Message> findByPostedBy(@Param("account_id") Integer account_id);
 }

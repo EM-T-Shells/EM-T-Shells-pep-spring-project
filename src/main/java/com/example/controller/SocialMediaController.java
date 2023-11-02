@@ -65,8 +65,6 @@ public class SocialMediaController {
             return new ResponseEntity<Message>(postMessage, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
@@ -87,6 +85,16 @@ public class SocialMediaController {
             return new ResponseEntity<>(message, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    @PatchMapping("messages/{messageId}")
+    public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody Message newMessage) {
+        try {
+            Message updatedMessage = messageService.updateMessage(messageId, newMessage.getMessage_text());
+            return new ResponseEntity<Message>(updatedMessage, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

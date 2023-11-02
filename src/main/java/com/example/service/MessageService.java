@@ -49,4 +49,22 @@ public class MessageService {
             throw new IllegalArgumentException("Message not found");
         }
     }
+
+    public Message updateMessage(Integer messageId, String newMessageText) {
+        if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length() < 255) {
+            Message existingMessage = messageRepository.findById(messageId).orElse(null);
+            if (existingMessage != null) {
+                existingMessage.setMessage_text(newMessageText); // Update the message_text
+                messageRepository.save(existingMessage);
+
+                return existingMessage; // Return the updated message
+            } else {
+                throw new IllegalArgumentException("Message not found");
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid new message text");
+        }
+    }
+
+
 }

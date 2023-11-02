@@ -23,21 +23,19 @@ public class MessageService {
         this.accountRepository = accountRepository;
     }
 
+    public List<Message> getAllMessages() {
+        return messageRepository.findAll();
+    }
+
     public Message postMessage(Message message) {
         if (message.getMessage_text().isEmpty() || message.getMessage_text() == null || message.getMessage_text().length() >= 255) {
             throw new IllegalArgumentException("Invalid message");
         }
-
         Account postedByUser = accountRepository.findById(message.getPosted_by()).orElse(null);
         if(postedByUser==null){
             throw new IllegalArgumentException("user does not exist");
         }
-
         return messageRepository.save(message);
-    }
-
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
     }
 
     public Message getMessageById(Integer messageId) {

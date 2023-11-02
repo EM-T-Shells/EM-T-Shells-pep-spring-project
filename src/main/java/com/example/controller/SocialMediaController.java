@@ -4,7 +4,6 @@ import com.example.entity.Account;
 import com.example.entity.Message;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
-import com.example.repository.MessageRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -88,12 +87,12 @@ public class SocialMediaController {
         }
     }
 
-    @PatchMapping("messages/{messageId}")
-    public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody Message newMessage) {
+    @PatchMapping("messages/{message_id}")
+    public ResponseEntity<Message> updateMessage(@PathVariable Integer message_id, @RequestBody Message newMessage) {
         try {
-            Message updatedMessage = messageService.updateMessage(messageId, newMessage.getMessage_text());
+            Message updatedMessage = messageService.updateMessage(message_id, newMessage.getMessage_text());
             return new ResponseEntity<Message>(updatedMessage, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

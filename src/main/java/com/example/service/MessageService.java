@@ -52,12 +52,11 @@ public class MessageService {
 
     public Message updateMessage(Integer messageId, String newMessageText) {
         if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length() < 255) {
-            Message existingMessage = messageRepository.findById(messageId).orElse(null);
+            Message existingMessage = messageRepository.findMessageById(messageId);
             if (existingMessage != null) {
-                existingMessage.setMessage_text(newMessageText); // Update the message_text
-                messageRepository.save(existingMessage);
-
-                return existingMessage; // Return the updated message
+                existingMessage.setMessage_text(newMessageText); 
+                Message updateMessage = messageRepository.save(existingMessage);
+                return updateMessage;
             } else {
                 throw new IllegalArgumentException("Message not found");
             }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -77,25 +78,14 @@ public class SocialMediaController {
         }
     }  
     
-    @GetMapping("/messages/{message_id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable Integer message_id) {
+    @GetMapping("/accounts/{account_id}/messages")
+    public ResponseEntity<List<Message>> getMessagesByAccount(@PathVariable Integer account_id) {
         try {
-            Message message = messageService.getMessageById(message_id);
-            return new ResponseEntity<>(message, HttpStatus.OK);
+            List<Message> messages = messageService.getMessagesByAccount(account_id);
+            return new ResponseEntity<>(messages, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PatchMapping("messages/{message_id}")
-    public ResponseEntity<Message> updateMessage(@PathVariable Integer message_id, @RequestBody Message newMessage) {
-        try {
-            Message updatedMessage = messageService.updateMessage(message_id, newMessage.getMessage_text());
-            return new ResponseEntity<Message>(updatedMessage, HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    
+      
 }

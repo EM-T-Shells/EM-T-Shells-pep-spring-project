@@ -1,7 +1,7 @@
 package com.example.service;
 
 import java.util.Optional;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,8 +9,6 @@ import com.example.entity.Message;
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
-
-import java.util.List;
 
 @Service
 public class MessageService {
@@ -50,20 +48,12 @@ public class MessageService {
         }
     }
 
-    public Message updateMessage(Integer messageId, String newMessageText) {
-        if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length() < 255) {
-            Message existingMessage = messageRepository.findMessageById(messageId);
-            if (existingMessage != null) {
-                existingMessage.setMessage_text(newMessageText); 
-                Message updateMessage = messageRepository.save(existingMessage);
-                return updateMessage;
-            } else {
-                throw new IllegalArgumentException("Message not found");
-            }
-        } else {
-            throw new IllegalArgumentException("Invalid new message text");
-        }
+    public List<Message> getMessagesByAccount(Integer account_id) {
+        List<Message> messages = messageRepository.findByPostedBy(account_id);
+        return messages;
     }
+    
 
 
+    
 }

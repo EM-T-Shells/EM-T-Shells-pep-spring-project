@@ -56,11 +56,10 @@ public class MessageService {
     public int deleteMessage(int messageId) {
         int count = 0;
         Message message = messageRepository.findMessageById(messageId);
-        while(message != null){
+        if(message != null){
             messageRepository.deleteById(messageId);
             count++;
-            message=messageRepository.findMessageById(messageId);
-        }
+        } 
         return count;
     }
 }

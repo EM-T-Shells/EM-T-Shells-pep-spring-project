@@ -102,7 +102,11 @@ public class SocialMediaController {
     public ResponseEntity<Integer> deleteMessage(@PathVariable int message_id) {
         try {
             int rows=messageService.deleteMessage(message_id);
-            return ResponseEntity.status(200).body(rows);
+            if(rows != 0){
+                return ResponseEntity.status(200).body(rows);
+            } else{
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

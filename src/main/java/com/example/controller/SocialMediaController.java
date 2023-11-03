@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -93,6 +93,16 @@ public class SocialMediaController {
         try {
             List<Message> messages = messageService.getMessagesByAccount(account_id);
             return new ResponseEntity<>(messages, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("messages/{message_id}")
+    public ResponseEntity<Integer> deleteMessage(@PathVariable int message_id) {
+        try {
+            int rows=messageService.deleteMessage(message_id);
+            return ResponseEntity.status(200).body(rows);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

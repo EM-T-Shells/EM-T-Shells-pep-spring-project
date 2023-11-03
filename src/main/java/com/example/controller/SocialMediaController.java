@@ -5,11 +5,7 @@ import com.example.entity.Message;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -111,4 +107,19 @@ public class SocialMediaController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping("/messages/{message_id}")
+    public ResponseEntity<Integer> updateMessage(@PathVariable Integer message_id, @RequestBody Message newMessage) {
+        try {
+            int rowsModified = messageService.updateMessage(message_id, newMessage);
+            if (rowsModified > 0) {
+                return ResponseEntity.status(200).body(rowsModified);
+            } else {
+                return ResponseEntity.status(404).body(0); 
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(0);
+        }
+    }
+    
 }

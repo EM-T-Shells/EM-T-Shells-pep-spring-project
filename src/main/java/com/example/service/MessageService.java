@@ -62,5 +62,23 @@ public class MessageService {
         } 
         return count;
     }
+
+    public int updateMessage(Integer messageId, Message newMessage) {
+        int count = 0;
+        Message existingMessage = messageRepository.findMessageById(messageId);
+        if (existingMessage == null) {
+            throw new IllegalArgumentException("Message not found with ID: " + messageId);
+        }
+        String newMessageText = newMessage.getMessage_text();
+        if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length() <= 255) {
+            existingMessage.setMessage_text(newMessageText);
+            messageRepository.save(existingMessage);
+            count++;
+            return count; 
+        } else {
+            throw new IllegalArgumentException("Invalid message text");
+        }
+    }    
 }
+    
 
